@@ -8,7 +8,7 @@ cluster_size=3
 cpu_nb=2
 core_nb=4
 thread_nd=1
-oar_resources_add -H $cluster_size -C $cpu_nb -c $core_nb -t $thread_nb --host-prefix $cluster_name
+oar_resources_add -H $cluster_size -C $cpu_nb -c $core_nb -t $thread_nb --host-prefix $cluster_name | bash -
 
 # Add custom g5k properties
 # Char properties
