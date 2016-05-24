@@ -14,12 +14,12 @@ oar_resources_add -H $cluster_size -C $cpu_nb -c $core_nb -t $thread_nb --host-p
 # Char properties
 for p in ip_virtual cpuarch cputype cpufreq virtual disktype ib10g ib10gmodel ib20g ib40g myri10g myri10gmodel nodemodel rconsole grub cluster;
 do
-    oarproperty -a $p -c;
+    oarproperty -a $p -c || echo "Error for $p";
 done;
 # Integer properties
 for p in cpucore ethnb memnode memcpu memcore;
 do
-    oarproperty -a $p;
+    oarproperty -a $p || echo "Error for $p";
 done;
 
 # Set some properties if needed
