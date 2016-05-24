@@ -7,7 +7,7 @@ cluster_size=3
 # Add ressources to OAR DB
 cpu_nb=2
 core_nb=4
-thread_nd=1
+thread_nb=1
 oar_resources_add -H $cluster_size -C $cpu_nb -c $core_nb -t $thread_nb --host-prefix $cluster_name | bash -
 
 # Add custom g5k properties
@@ -49,7 +49,7 @@ for i in $(seq 1 $cluster_size);
 do
     for p in "${!default_properties[@]}";
     do
-        oarnodesetting -h ${cluster_name}-$i -p $p=${default_properties["$p"]};
+        oarnodesetting -h ${cluster_name}$i -p $p=${default_properties["$p"]};
     done
 done
 
