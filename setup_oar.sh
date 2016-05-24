@@ -6,8 +6,8 @@ cluster_size=3
 
 # Add ressources to OAR DB
 cpu_nb=2
-core_nb=4
-thread_nb=1
+core_nb=2
+thread_nb=2
 oar_resources_add -H $cluster_size -C $cpu_nb -c $core_nb -t $thread_nb --host-prefix $cluster_name | bash -
 
 # Add custom g5k properties
