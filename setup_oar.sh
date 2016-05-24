@@ -17,7 +17,7 @@ do
     oarproperty -a $p -c || echo "Error for $p";
 done;
 # Integer properties
-for p in cpucore ethnb memnode memcpu memcore;
+for p in cpucore ethnb memnode memcpu memcore max_walltime;
 do
     oarproperty -a $p || echo "Error for $p";
 done;
@@ -45,6 +45,7 @@ default_properties=(
 ["memnode"]=129024
 ["memcpu"]=64512
 ["memcore"]=8064
+["max_walltime"]=0
 ["production"]='NO')
 
 for i in $(seq 1 $cluster_size);
