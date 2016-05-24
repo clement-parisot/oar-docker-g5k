@@ -69,6 +69,12 @@ for r in $(ls -1 ${rules_path}/* | sort -V);
 do
     oaradmissionrules -n -r $r
 done;
+# Set priority and activate rules
+#TODO Fix this part, priority is set to rule number...
+for n in $(oaradmissionrules -S | grep RULE | sed "s/.*RULE #\(.*\)/\1/");
+do
+    oaradmissionrules -m $n -P $n -Y;
+done;
 
 # Create queues
 oarnotify --add-queue admin,10,oar_sched_gantt_with_timesharing
