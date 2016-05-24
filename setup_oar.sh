@@ -68,3 +68,8 @@ for r in $(ls -1 ${rules_path}/* | sort -V);
 do
     oaradmissionrules -n -r $r
 done;
+
+# Create queues
+oarnotify --add-queue admin,10,oar_sched_gantt_with_timesharing
+oarnotify --add-queue production,3,oar_sched_gantt_with_timesharing_and_fairsharing
+oarnotify --add-queue challenge,3,oar_sched_gantt_with_timesharing_and_fairsharing
