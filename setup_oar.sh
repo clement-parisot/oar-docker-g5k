@@ -54,4 +54,15 @@ do
 done
 
 # Import admission rules
-# TODO
+# Clean existing admission rules
+rules_nb=$(oaradmissionrules -S | grep -c RULE) # Ugly trick to get number of rules
+for n in $(seq 1 $rules_nb);
+do
+    oaradmissionrules -d $n
+done;
+# Import rules
+rules_path="/mnt/rules_nancy"
+for r in $(ls -1 ${rules_path}/* | sort -V);
+do
+    oaradmissionrules -n -r $r
+done;
