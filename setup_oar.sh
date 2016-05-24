@@ -12,7 +12,7 @@ oar_resources_add -H $cluster_size -C $cpu_nb -c $core_nb -t $thread_nb --host-p
 
 # Add custom g5k properties
 # Char properties
-for p in ip_virtual cpuarch cputype cpufreq virtual disktype ib10g ib10gmodel ib20g ib40g myri10g myri10gmodel nodemodel rconsole grub cluster;
+for p in ip_virtual cpuarch cputype cpufreq virtual disktype ib10g ib10gmodel ib20g ib40g myri10g myri10gmodel nodemodel rconsole grub cluster maintenance production;
 do
     oarproperty -a $p -c || echo "Error for $p";
 done;
@@ -41,9 +41,11 @@ default_properties=(
 ["cpufreq"]=3.2
 ["cpucore"]=$(($cpu_nb * $core_nb))
 ["ethnb"]=1
+["maintenance"]='NO'
 ["memnode"]=129024
 ["memcpu"]=64512
-["memcore"]=8064)
+["memcore"]=8064
+["production"]='NO')
 
 for i in $(seq 1 $cluster_size);
 do
