@@ -23,7 +23,7 @@ $ ./setup_oar.sh
 ```
 * When script ends, connect on frontend and try to reserve a node
 ```
-user@laptop: oardocker connect server
+user@laptop: oardocker connect
 docker@frontend ~
 $ oarsub -I 
 [ADMISSION RULE] Set default walltime to 3600.
