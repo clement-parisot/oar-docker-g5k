@@ -85,3 +85,8 @@ oarnotify --add-queue testing,5,oar_sched_gantt_with_timesharing
 # Customize nodes properties
 oarproperty -a comment --varchar
 oarnodesetting --sql="host like '%'" -p "comment=OK" -p "deploy=YES"
+
+# Customize oar.conf
+sed -i 's/\(OARSUB_DEFAULT_RESOURCES=\).*/\1"\/host=1"/' /etc/oar/oar.conf
+sed -i 's/\(OARSUB_NODES_RESOURCES=\).*/\1"host"/' /etc/oar/oar.conf
+sed -i 's/\(OARSUB_FORCE_JOB_KEY=\).*/\1"yes"/' /etc/oar/oar.conf
