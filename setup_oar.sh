@@ -81,3 +81,7 @@ oarnotify --add-queue admin,10,oar_sched_gantt_with_timesharing
 oarnotify --add-queue production,3,oar_sched_gantt_with_timesharing_and_fairsharing
 oarnotify --add-queue challenge,3,oar_sched_gantt_with_timesharing_and_fairsharing
 oarnotify --add-queue testing,5,oar_sched_gantt_with_timesharing
+
+# Customize nodes properties
+oarproperty -a comment --varchar
+oarnodesetting --sql="host like '%'" -p "comment=OK" -p "deploy=YES"
