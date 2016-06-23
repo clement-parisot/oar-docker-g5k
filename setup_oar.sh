@@ -77,10 +77,13 @@ do
 done;
 
 # Create queues
+oarnotify --remove-queue admin --remove-queue default --remove-queue besteffort
 oarnotify --add-queue admin,10,oar_sched_gantt_with_timesharing
+oarnotify --add-queue default,2,oar_sched_gantt_with_timesharing
+oarnotify --add-queue besteffort,0,oar_sched_gantt_with_timesharing
+oarnotify --add-queue testing,5,oar_sched_gantt_with_timesharing
 oarnotify --add-queue production,3,oar_sched_gantt_with_timesharing_and_fairsharing
 oarnotify --add-queue challenge,3,oar_sched_gantt_with_timesharing_and_fairsharing
-oarnotify --add-queue testing,5,oar_sched_gantt_with_timesharing
 
 # Customize nodes properties
 oarproperty -a comment --varchar
