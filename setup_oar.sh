@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 set -x
+REPO_DIR=`dirname $0`
+
 cluster_name="node"
 cluster_size=3
 
@@ -64,7 +66,7 @@ do
     oaradmissionrules -d $n
 done;
 # Import rules
-rules_path="/mnt/rules_nancy"
+rules_path="$REPO_DIR/rules_nancy"
 for r in $(ls -1 ${rules_path}/* | sort -V);
 do
     oaradmissionrules -n -r $r
