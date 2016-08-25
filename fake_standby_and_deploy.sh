@@ -74,10 +74,6 @@ DRAWGANTT_PATCH
 < OARSUB_DEFAULT_RESOURCES="/resource_id=1"
 ---
 > OARSUB_DEFAULT_RESOURCES="/nodes=1"
-42c42
-< OARSUB_NODES_RESOURCES="network_address"
----
-> OARSUB_NODES_RESOURCES="nodes"
 OAR_PATCH
     patch --verbose /etc/oar/oar.conf < /tmp/oar_patch
 
