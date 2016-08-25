@@ -4,16 +4,16 @@
 # (see http://oar.imag.fr/wiki:oardocker_setup_for_grid_5000)
 #
 
-set -x
-
 if [[ "`hostname`" == "frontend" ]]
 then
-######################
-#      FRONTEND      #
-######################
+    ######################
+    #      FRONTEND      #
+    ######################
+    echo "frontend's configuration"
 
     # this needs the oar repo to be linked with "oardocker start -v $PWD:/mnt"
-    cd /mnt/ ; make node-build node-install node-setup
+    cd /mnt/
+    make node-build node-install node-setup
     
     # run daemons
     apt-get install -y at
@@ -21,10 +21,9 @@ then
     cp /usr/local/share/oar/oar-node/init.d/oar-node /etc/init.d
     cp /usr/local/share/oar/oar-node/default/oar-node /etc/default/
     /etc/init.d/oar-node start
-    apt-get install -y at
-    /etc/init.d/atd start
 
-    # re-write epilogue
+    # overwrite epilogue
+    echo -n "overwrite epilogue… "
     cat > /etc/oar/epilogue <<EPILOGUE
 #!/bin/bash
 # Usage:
@@ -50,6 +49,7 @@ done
 
 exit 0
 EPILOGUE
+    echo "done"
 
     # patch drawgantt config
     cat > /tmp/drawgantt_patch <<DRAWGANTT_PATCH
@@ -66,7 +66,7 @@ EPILOGUE
 ---
 >   'deploy', 'cpuset', 'besteffort', 'network_address', 'type', 'drain', 'state', 'available_upto');
 DRAWGANTT_PATCH
-    patch /etc/oar/drawgantt-config.inc.php < /tmp/drawgantt_patch
+    patch --verbose /etc/oar/drawgantt-config.inc.php < /tmp/drawgantt_patch
 
     # patch OAR config
     cat > /tmp/oar_patch << OAR_PATCH
@@ -79,20 +79,23 @@ DRAWGANTT_PATCH
 ---
 > OARSUB_NODES_RESOURCES="nodes"
 OAR_PATCH
-    patch /etc/oar/oar.conf < /tmp/oar_patch
+    patch --verbose /etc/oar/oar.conf < /tmp/oar_patch
 
-## end of frontend's side
+    exit 0
+    ## end of frontend's side
 elif [[ "`hostname`" == "server" ]]
 then
-######################
-#       SERVER       #
-######################
+    #######################
+    ##       SERVER       #
+    #######################
+    echo "--- Server's configuration ---"
 
     # run daemons
     apt-get install -y at
     /etc/init.d/atd start
 
-    # re-write wake_up_nodes.sh
+    # overwrite wake_up_nodes.sh
+    echo -n "overwrite wake_up_nodes.sh… "
     cat > /etc/oar/wake_up_nodes.sh << WAKE_UP_NODES
 #!/bin/bash
 # Sample script for energy saving (wake-up)
@@ -109,8 +112,10 @@ while read n; do
     done
 done
 WAKE_UP_NODES
+    echo "done"
 
-    # re-write shut_down_nodes.sh
+    # overwrite shut_down_nodes.sh
+    echo -n "overwrite shut_down_nodes.sh… "
     cat > /etc/oar/shut_down_nodes.sh << SHUT_DOWN_NODES
 #!/bin/bash
 # Sample script for energy saving (shut-down)
@@ -124,6 +129,7 @@ while read n; do
     done
 done
 SHUT_DOWN_NODES
+    echo "done"
 
     # patch OAR config
     cat > /tmp/oar_patch << OAR_PATCH
@@ -183,7 +189,8 @@ SHUT_DOWN_NODES
 > ENERGY_MAX_CYCLES_UNTIL_REFRESH="500"
 OAR_PATCH
 
-## end of server's side
+  exit 0
+  ## end of server's side
 else
     echo "Error: please run this on oardocker's frontend or server!"
     exit 1
