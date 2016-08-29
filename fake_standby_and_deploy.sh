@@ -45,7 +45,7 @@ for n in \$(uniq \$3); do
 done
 #\$OARNODESETTINGCMD \$nodes -s Absent -p available_upto=0
 # set the nodes down, using the command used on g5k:
-\$OARNODESETTINGCMD -n -s Absent -p available_upto=0 --sql "resource_id IN (select assigned_resources.resource_id from jobs,assigned_resources,resources where assigned_resource_index = 'CURRENT' AND jobs.state = 'Running' AND jobs.job_id = $1 and moldable_job_id = jobs.assigned_moldable_job AND (resources.resource_id = assigned_resources.resource_id AND resources.type='default'))"
+\$OARNODESETTINGCMD -n -s Absent -p available_upto=0 --sql "resource_id IN (select assigned_resources.resource_id from jobs,assigned_resources,resources where assigned_resource_index = 'CURRENT' AND jobs.state = 'Running' AND jobs.job_id = \$1 and moldable_job_id = jobs.assigned_moldable_job AND (resources.resource_id = assigned_resources.resource_id AND resources.type='default'))"
 
 exit 0
 EPILOGUE
