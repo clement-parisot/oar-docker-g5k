@@ -184,6 +184,7 @@ SHUT_DOWN_NODES
 ---
 > ENERGY_MAX_CYCLES_UNTIL_REFRESH="500"
 OAR_PATCH
+  patch --verbose /etc/oar/oar.conf < /tmp/oar_patch
 
   exit 0
   ## end of server's side
