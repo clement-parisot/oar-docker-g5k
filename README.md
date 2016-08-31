@@ -2,30 +2,35 @@
 Custom script to configure oar-docker with g5k configuration
 
 # Installation
-* See **oar-docker** (https://github.com/oar-team/oar-docker) and follow instruction to install the tool
-* Clone the repository on the oar-docker workspace
-* Run oar-docker and share this repository in docker /mnt directory for exemple
+* Clone OAR repository (https://github.com/oar-team/oar) in your workspace
+* Clone this repository in your worspace
+* See **oar-docker** (https://github.com/oar-team/oar-docker) and follow instructions to install the tool
+- at this step, make sure to init and install oardocker directly in OAR sources' directory:
 ```
-user@laptop: oardocker start -v /path/to/your/workspace/oar-docker-g5k/:/mnt/
+user@laptop:/path/to/your/workspace/oar$ oardocker init
+user@laptop:/path/to/your/workspace/oar$ oardocker install .
 ```
-* Connect on server
+* Start oar-docker and share some directories:
+- OAR source code in /mnt (needed)
+- this repository in docker's ~/oar-docker-g5k/ directory for exemple.
 ```
-user@laptop: oardocker connect server
+user@laptop:/path/to/your/worspace/oar$ oardocker start -v /path/to/your/workspace/oar-docker-g5k:/home/docker/oar-docker-g5k -v $PWD:/mnt -n 3
 ```
-* Run the setup script
+* Connect on frontend
 ```
-docker@server ~
-$ cd /mnt
-docker@server /mnt (master|✔)
-$ sudo su
-root@server /mnt (master|✔)
-$ ./setup_oar.sh 
+user@laptop:/path/to/your/workspace/oar$ oardocker connect
 ```
-* When script ends, connect on frontend and try to reserve a node
+* Run the setup scripts
 ```
-user@laptop: oardocker connect
 docker@frontend ~
-$ oarsub -I 
+$ cd oar-docker-g5k/ ; sudo ./fake_standby_and_deploy.sh ; ssh server
+docker@server ~
+$ cd oar-docker-g5k/ ; sudo ./setup.sh ; sudo ./fake_standby_and_deploy.sh ;
+```
+* Then, go back to the frontend and try to reserve a node
+```
+docker@frontend ~
+$ oarsub -I
 [ADMISSION RULE] Set default walltime to 3600.
 [ADMISSION RULE] Modify resource description with type constraints
 OAR_JOB_ID=1
