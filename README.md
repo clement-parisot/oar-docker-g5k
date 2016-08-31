@@ -5,14 +5,14 @@ Custom script to configure oar-docker with g5k configuration
 * Clone OAR repository (https://github.com/oar-team/oar) in your workspace
 * Clone this repository in your worspace
 * See **oar-docker** (https://github.com/oar-team/oar-docker) and follow instructions to install the tool
-- at this step, make sure to init and install oardocker directly in OAR sources' directory:
+  * at this step, make sure to init and install oardocker directly in OAR sources' directory:
 ```
 user@laptop:/path/to/your/workspace/oar$ oardocker init
 user@laptop:/path/to/your/workspace/oar$ oardocker install .
 ```
 * Start oar-docker and share some directories:
-- OAR source code in /mnt (needed)
-- this repository in docker's ~/oar-docker-g5k/ directory for exemple.
+  * OAR source code in /mnt (needed)
+  * - this repository in docker's ~/oar-docker-g5k/ directory for exemple.
 ```
 user@laptop:/path/to/your/worspace/oar$ oardocker start -v /path/to/your/workspace/oar-docker-g5k:/home/docker/oar-docker-g5k -v $PWD:/mnt -n 3
 ```
