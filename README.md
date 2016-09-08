@@ -3,6 +3,10 @@ Custom script to configure oar-docker with g5k configuration
 
 # Installation
 * Clone OAR repository (https://github.com/oar-team/oar) in your workspace
+  * and checkout to version 2.5.7 (current version on Grid'5000)
+```
+user@laptop:/path/to/your/workspace/oar$ git checkout 2.5.7
+```
 * Clone this repository in your worspace
 * See **oar-docker** (https://github.com/oar-team/oar-docker) and follow instructions to install the tool
   * at this step, make sure to init and install oardocker directly in OAR sources' directory:
