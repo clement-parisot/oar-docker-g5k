@@ -1,0 +1,157 @@
+--- a/usr/local/lib/oar/oar_meta_sched
++++ b/usr/local/lib/oar/oar_meta_sched
+@@ -642,7 +642,11 @@ sub check_reservation_jobs($$){
+ sub check_jobs_to_kill(){
+     oar_debug("[MetaSched] Begin precessing of besteffort jobs to kill\n");
+     my $return = 0;
+-    my %nodes_for_jobs_to_launch = OAR::IO::get_gantt_resources_for_jobs_to_launch($base,$current_time_sec);
++    # Delete besteffort jobs in advance to let enough time to get back the nodes
++    # in a good shape for the reservations
++    my $besteffort_kill_duration = get_conf_with_default_param("SCHEDULER_BESTEFFORT_KILL_DURATION_BEFORE_RESERVATION", 0);
++    $besteffort_kill_duration = $Security_time_overhead if ($besteffort_kill_duration < $Security_time_overhead);
++    my %nodes_for_jobs_to_launch = OAR::IO::get_gantt_resources_for_jobs_to_launch($base,$current_time_sec + $besteffort_kill_duration);
+     my %fragged_jobs = ();
+     foreach my $r (keys(%nodes_for_jobs_to_launch)){
+         if (defined($besteffort_resource_occupation{$r})) {
+--- a/usr/local/lib/oar/schedulers/oar_sched_gantt_with_timesharing
++++ b/usr/local/lib/oar/schedulers/oar_sched_gantt_with_timesharing
+@@ -24,9 +24,6 @@ if (is_conf("SCHEDULER_TIMEOUT")){
+     $timeout = get_conf("SCHEDULER_TIMEOUT");
+ }
+ 
+-# Constant duration time of a besteffort job
+-my $besteffort_duration = 5*60;
+-
+ my $max_waiting_jobs_to_schedule = 1000;
+ 
+ # $security_time_overhead is the security time (second) used to be sure there
+@@ -36,6 +33,12 @@ if (is_conf("SCHEDULER_JOB_SECURITY_TIME")){
+     $security_time_overhead = get_conf("SCHEDULER_JOB_SECURITY_TIME");
+ }
+ 
++# Constant duration time of a besteffort job
++my $besteffort_duration = 5*60;
++$besteffort_duration = $security_time_overhead if ($besteffort_duration < $security_time_overhead);
++my $besteffort_kill_duration = get_conf_with_default_param("SCHEDULER_BESTEFFORT_KILL_DURATION_BEFORE_RESERVATION", 0);
++$besteffort_duration = $besteffort_kill_duration if ($besteffort_duration < $besteffort_kill_duration);
++
+ my $minimum_hole_time = 0;
+ if (is_conf("SCHEDULER_GANTT_HOLE_MINIMUM_TIME")){
+     $minimum_hole_time = get_conf("SCHEDULER_GANTT_HOLE_MINIMUM_TIME");
+--- a/usr/local/lib/oar/schedulers/oar_sched_gantt_with_timesharing_and_fairsharing
++++ b/usr/local/lib/oar/schedulers/oar_sched_gantt_with_timesharing_and_fairsharing
+@@ -81,9 +81,6 @@ if (is_conf("SCHEDULER_TIMEOUT")){
+     $timeout = get_conf("SCHEDULER_TIMEOUT");
+ }
+ 
+-# Constant duration time of a besteffort job
+-my $besteffort_duration = 5*60;
+-
+ # $security_time_overhead is the security time (second) used to be sure there
+ # are no problem with overlaping jobs
+ my $security_time_overhead = 60;
+@@ -91,6 +88,12 @@ if (is_conf("SCHEDULER_JOB_SECURITY_TIME")){
+     $security_time_overhead = get_conf("SCHEDULER_JOB_SECURITY_TIME");
+ }
+ 
++# Constant duration time of a besteffort job
++my $besteffort_duration = 5*60;
++$besteffort_duration = $security_time_overhead if ($besteffort_duration < $security_time_overhead);
++my $besteffort_kill_duration = get_conf_with_default_param("SCHEDULER_BESTEFFORT_KILL_DURATION_BEFORE_RESERVATION", 0);
++$besteffort_duration = $besteffort_kill_duration if ($besteffort_duration < $besteffort_kill_duration);
++
+ my $minimum_hole_time = 0;
+ if (is_conf("SCHEDULER_GANTT_HOLE_MINIMUM_TIME")){
+     $minimum_hole_time = get_conf("SCHEDULER_GANTT_HOLE_MINIMUM_TIME");
+--- a/usr/local/lib/oar/schedulers/oar_sched_gantt_with_timesharing_and_fairsharing_and_placeholder
++++ b/usr/local/lib/oar/schedulers/oar_sched_gantt_with_timesharing_and_fairsharing_and_placeholder
+@@ -80,9 +80,6 @@ if (is_conf("SCHEDULER_TIMEOUT")){
+     $timeout = get_conf("SCHEDULER_TIMEOUT");
+ }
+ 
+-# Constant duration time of a besteffort job
+-my $besteffort_duration = 5*60;
+-
+ # $security_time_overhead is the security time (second) used to be sure there
+ # are no problem with overlaping jobs
+ my $security_time_overhead = 60;
+@@ -90,6 +87,12 @@ if (is_conf("SCHEDULER_JOB_SECURITY_TIME")){
+     $security_time_overhead = get_conf("SCHEDULER_JOB_SECURITY_TIME");
+ }
+ 
++# Constant duration time of a besteffort job
++my $besteffort_duration = 5*60;
++$besteffort_duration = $security_time_overhead if ($besteffort_duration < $security_time_overhead);
++my $besteffort_kill_duration = get_conf_with_default_param("SCHEDULER_BESTEFFORT_KILL_DURATION_BEFORE_RESERVATION", 0);
++$besteffort_duration = $besteffort_kill_duration if ($besteffort_duration < $besteffort_kill_duration);
++
+ my $minimum_hole_time = 0;
+ if (is_conf("SCHEDULER_GANTT_HOLE_MINIMUM_TIME")){
+     $minimum_hole_time = get_conf("SCHEDULER_GANTT_HOLE_MINIMUM_TIME");
+--- a/usr/local/lib/oar/schedulers/oar_sched_gantt_with_timesharing_and_fairsharing_and_quotas
++++ b/usr/local/lib/oar/schedulers/oar_sched_gantt_with_timesharing_and_fairsharing_and_quotas
+@@ -96,9 +96,6 @@ if (is_conf("SCHEDULER_TIMEOUT")){
+     $timeout = get_conf("SCHEDULER_TIMEOUT");
+ }
+ 
+-# Constant duration time of a besteffort job
+-my $besteffort_duration = 5*60;
+-
+ # $security_time_overhead is the security time (second) used to be sure there
+ # are no problem with overlaping jobs
+ my $security_time_overhead = 60;
+@@ -106,6 +103,12 @@ if (is_conf("SCHEDULER_JOB_SECURITY_TIME")){
+     $security_time_overhead = get_conf("SCHEDULER_JOB_SECURITY_TIME");
+ }
+ 
++# Constant duration time of a besteffort job
++my $besteffort_duration = 5*60;
++$besteffort_duration = $security_time_overhead if ($besteffort_duration < $security_time_overhead);
++my $besteffort_kill_duration = get_conf_with_default_param("SCHEDULER_BESTEFFORT_KILL_DURATION_BEFORE_RESERVATION", 0);
++$besteffort_duration = $besteffort_kill_duration if ($besteffort_duration < $besteffort_kill_duration);
++
+ my $minimum_hole_time = 0;
+ if (is_conf("SCHEDULER_GANTT_HOLE_MINIMUM_TIME")){
+     $minimum_hole_time = get_conf("SCHEDULER_GANTT_HOLE_MINIMUM_TIME");
+--- a/usr/local/lib/oar/schedulers/oar_sched_gantt_with_timesharing_and_placeholder
++++ b/usr/local/lib/oar/schedulers/oar_sched_gantt_with_timesharing_and_placeholder
+@@ -23,9 +23,6 @@ if (is_conf("SCHEDULER_TIMEOUT")){
+     $timeout = get_conf("SCHEDULER_TIMEOUT");
+ }
+ 
+-# Constant duration time of a besteffort job
+-my $besteffort_duration = 5*60;
+-
+ my $max_waiting_jobs_to_schedule = 1000;
+ 
+ # $security_time_overhead is the security time (second) used to be sure there
+@@ -35,6 +32,12 @@ if (is_conf("SCHEDULER_JOB_SECURITY_TIME")){
+     $security_time_overhead = get_conf("SCHEDULER_JOB_SECURITY_TIME");
+ }
+ 
++# Constant duration time of a besteffort job
++my $besteffort_duration = 5*60;
++$besteffort_duration = $security_time_overhead if ($besteffort_duration < $security_time_overhead);
++my $besteffort_kill_duration = get_conf_with_default_param("SCHEDULER_BESTEFFORT_KILL_DURATION_BEFORE_RESERVATION", 0);
++$besteffort_duration = $besteffort_kill_duration if ($besteffort_duration < $besteffort_kill_duration);
++
+ my $minimum_hole_time = 0;
+ if (is_conf("SCHEDULER_GANTT_HOLE_MINIMUM_TIME")){
+     $minimum_hole_time = get_conf("SCHEDULER_GANTT_HOLE_MINIMUM_TIME");
+--- a/etc/oar/oar.conf
++++ b/etc/oar/oar.conf
+@@ -233,6 +233,14 @@ SCHEDULER_NB_PROCESSES=1
+ # default time is 60 seconds
+ SCHEDULER_JOB_SECURITY_TIME="60"
+ 
++# Number of seconds before the start of the reservations when the besteffort
++# jobs will be deleted (this will let some time to get back the nodes in a good
++# shape for the reservations)
++# default is 0 seconds
++# if SCHEDULER_BESTEFFORT_KILL_DURATION_BEFORE_RESERVATION < SCHEDULER_JOB_SECURITY_TIME then
++#     SCHEDULER_BESTEFFORT_KILL_DURATION_BEFORE_RESERVATION = SCHEDULER_JOB_SECURITY_TIME
++SCHEDULER_BESTEFFORT_KILL_DURATION_BEFORE_RESERVATION="300"
++
+ # Minimum time in seconds that can be considered like a hole where a job could
+ # be scheduled in (if you have performance problems, you can try to increase
+ # this)

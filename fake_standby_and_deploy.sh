@@ -74,6 +74,11 @@ DRAWGANTT_PATCH
 < OARSUB_DEFAULT_RESOURCES="/resource_id=1"
 ---
 > OARSUB_DEFAULT_RESOURCES="/nodes=1"
+---
+242c242
+< #SCHEDULER_BESTEFFORT_KILL_DURATION_BEFORE_RESERVATION=0
+---
+> SCHEDULER_BESTEFFORT_KILL_DURATION_BEFORE_RESERVATION="300"
 OAR_PATCH
     patch --verbose /etc/oar/oar.conf < /tmp/oar_patch
 
@@ -184,10 +189,13 @@ SHUT_DOWN_NODES
 ---
 > ENERGY_MAX_CYCLES_UNTIL_REFRESH="500"
 OAR_PATCH
-  patch --verbose /etc/oar/oar.conf < /tmp/oar_patch
+    patch --verbose /etc/oar/oar.conf < /tmp/oar_patch
 
-  exit 0
-  ## end of server's side
+    # apply patch about besteffort jobs (bug#6335)
+    patch -d / -p1 --verbose < ~docker/oar-docker-g5k/patch_besteffort.diff
+
+    exit 0
+    ## end of server's side
 else
     echo "Error: please run this on oardocker's frontend or server!"
     exit 1
